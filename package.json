@@ -1,0 +1,38 @@
+{
+  "name": "loraiot_server",
+  "version": "1.0.0",
+  "description": "LoRa IoT Server",
+  "main": "index.js",
+  "engines": {
+    "node": "10.15.0",
+    "npm": "6.5.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "keywords": [
+    "Node",
+    "ExpressJS",
+    "Database"
+  ],
+  "author": "Choonewza@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "concurrently": "^4.1.0",
+    "cookie-session": "^2.0.0-beta.3",
+    "express": "^4.16.4",
+    "moment": "^2.23.0",
+    "mongoose": "^5.4.1",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.9",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0",
+    "validator": "^10.10.0"
+  }
+}
