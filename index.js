@@ -9,7 +9,6 @@ const keys = require("./config/keys");
 
 //Services
 require("./services/mongoose");
-// require("./services/passport");
 
 const app = express();
 
@@ -18,7 +17,6 @@ if (process.env.NODE_ENV == "production") {
 } else {
   app.use(morgan("dev"));
 }
-
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
@@ -40,6 +38,7 @@ app.use(bodyParser.json());
 //Routes
 // require("./app/routes/authRoutes")(app);
 require("./app/routes/loraiotRoutes")(app);
+require("./app/routes/dataRouter")(app);
 
 if (process.env.NODE_ENV === "production") {
   //Express will serve up production assets

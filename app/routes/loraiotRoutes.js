@@ -3,4 +3,5 @@ module.exports = app => {
 
   app.post("/api/iot/receiver", route.store);
   app.get("/api/iot-received", route.list);
+
 };
