@@ -36,33 +36,65 @@ exports.store = async (req, res, next) => {
     }
 
     const result = await new Sensor({
-      Time: data.Time,
-      DevEUI: data.DevEUI,
-      DevAddr: data.DevAddr,
-      FPort: data.FPort,
-      FCntUp: data.FCntUp,
-      ADRbit: data.ADRbit,
-      MType: data.MType,
-      FCntDn: data.FCntDn,
-      payload_hex: data.payload_hex,
-      mic_hex: data.mic_hex,
-      Lrcid: data.Lrcid,
-      LrrRSSI: data.LrrRSSI,
-      LrrSNR: data.LrrSNR,
-      SpFact: data.SpFact,
-      SubBand: data.SubBand,
-      Channel: data.Channel,
-      DevLrrCnt: data.DevLrrCnt,
-      Lrrid: data.Lrrid,
-      Late: data.Late,
-      LrrLAT: data.LrrLAT,
-      LrrLON: data.LrrLON,
-      Lrrs: JSON.stringify(data.Lrrs),
-      CustomerID: data.CustomerID,
-      CustomerData: JSON.stringify(data.CustomerData),
-      ModelCfg: data.ModelCfg,
-      InstantPER: data.InstantPER,
-      MeanPER: data.MeanPER
+      DevEUI_uplink :{
+        Time: data.Time,
+        DevEUI: data.DevEUI,
+        DevAddr: data.DevAddr,
+        FPort: data.FPort,
+        FCntUp: data.FCntUp,
+        ADRbit: data.ADRbit,
+        MType: data.MType,
+        FCntDn: data.FCntDn,
+        payload_hex: data.payload_hex,
+        mic_hex: data.mic_hex,
+        Lrcid: data.Lrcid,
+        LrrRSSI: data.LrrRSSI,
+        LrrSNR: data.LrrSNR,
+        SpFact: data.SpFact,
+        SubBand: data.SubBand,
+        Channel: data.Channel,
+        DevLrrCnt: data.DevLrrCnt,
+        Lrrid: data.Lrrid,
+        Late: data.Late,
+        LrrLAT: data.LrrLAT,
+        LrrLON: data.LrrLON,
+        Lrrs: {
+          Lrr: [
+            {
+              Chain: data.Lrrs.Lrr[0].Chain,
+              LrrESP: data.Lrrs.Lrr[0].LrrESP,
+              LrrRSSI: data.Lrrs.Lrr[0].LrrRSSI,
+              LrrSNR: data.Lrrs.Lrr[0].LrrSNR,
+              Lrrid:data.Lrrs.Lrr[0].Lrrid
+            }
+            // {
+            //   Chain: data.Lrrs.Lrr[1].Chain,
+            //   LrrESP: data.Lrrs.Lrr[1].LrrESP,
+            //   LrrRSSI: data.Lrrs.Lrr[1].LrrRSSI,
+            //   LrrSNR: data.Lrrs.Lrr[1].LrrSNR,
+            //   Lrrid:data.Lrrs.Lrr[1].Lrrid
+            // },
+            // {
+            //   Chain: data.Lrrs.Lrr[2].Chain,
+            //   LrrESP: data.Lrrs.Lrr[2].LrrESP,
+            //   LrrRSSI: data.Lrrs.Lrr[2].LrrRSSI,
+            //   LrrSNR: data.Lrrs.Lrr[2].LrrSNR,
+            //   Lrrid:data.Lrrs.Lrr[2].Lrrid
+            // }
+          ]
+        },
+        CustomerID: data.CustomerID,
+        CustomerData: {
+          alr: {
+            pro: data.CustomerData.alr.pro,
+            ver: data.CustomerData.alr.ver
+          }
+        },
+        ModelCfg: data.ModelCfg,
+        InstantPER: data.InstantPER,
+        MeanPER: data.MeanPER
+      }
+      
     }).save();
 
     return res.send("1");
