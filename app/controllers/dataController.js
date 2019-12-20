@@ -6,16 +6,15 @@ const sleep = milliseconds => {
 };
 
 exports.updateData = async (req, res, next) => {
-  while(1){
+  //while(1){
     const loraData = await getlist();
     const mainData = await getData();
-    // console.log("loraData " + loraData.length);
     // console.log("mainData " + mainData.length);
-    if (!checkNewData(loraData, mainData)) sleep(5000);
+    //if (!checkNewData(loraData, mainData)) sleep(5000);
     let d = await validate(loraData);
     let sizeUnupload = (loraData.length-(loraData.length-mainData.length))
     await saveData(d,sizeUnupload)
-  }
+  //}
   
 };
 exports.getdata = async (req, res, next) => {
@@ -32,7 +31,7 @@ saveData = async (d,index) => {
   for(let i=index ; i < d.length ; i++){
     console.log("HAVE NEW DATA");
     await new Location({
-      Timestamp: d[i].Time,
+      Timestamp: d[i].Timestamp,
       Latitude: d[i].Latitude,
       Longitude: d[i].Longitude,
       Alittude: d[i].Alittude,
@@ -44,9 +43,9 @@ validate = async d => {
   var newList = [];
   d.forEach(async _ => {
     let tmplist = {};
-    if (_.payload_hex && _.payload_hex.split("").length == 20) {
-      let __ = await setFormData(_.payload_hex);
-      tmplist.Timestamp = _.Time
+    if (_.DevEUI_uplink.payload_hex && _.DevEUI_uplink.payload_hex.split("").length == 20) {
+      let __ = await setFormData(_.DevEUI_uplink.payload_hex);
+      tmplist.Timestamp = _.DevEUI_uplink.Time
       tmplist.Latitude = __.latitude;
       tmplist.Longitude = __.longitude;
       tmplist.Team = 13;
