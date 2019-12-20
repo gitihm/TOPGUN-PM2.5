@@ -5,6 +5,7 @@ const keys = require("../config/keys");
 require("./../app/models/User");
 require("./../app/models/Sensor");
 require("./../app/models/Data");
+require("./../app/models/Location");
 mongoose.connect(
   keys.mongoURI,
   {

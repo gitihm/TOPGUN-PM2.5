@@ -29,6 +29,7 @@ exports.list = async (req, res, next) => {
 exports.store = async (req, res, next) => {
   try {
     const data = req.body.DevEUI_uplink;
+    console.log(req.body.DevEUI_uplink);
 
     if (!data) {
       return res.send("0");
