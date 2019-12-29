@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Sensor = mongoose.model("sensors");
 const Location = mongoose.model("location");
+const Pm = mongoose.model("pm");
 const sleep = milliseconds => {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 };
@@ -9,11 +10,16 @@ exports.updateData = async (req, res, next) => {
   //while(1){
     const loraData = await getlist();
     const mainData = await getData();
+    const pmData = await getPM();
+    console.log(pmData.length);
     // console.log("mainData " + mainData.length);
     //if (!checkNewData(loraData, mainData)) sleep(5000);
     let d = await validate(loraData);
     let sizeUnupload = (loraData.length-(loraData.length-mainData.length))
-    await saveData(d,sizeUnupload)
+    let sizeUnuploadPM = (loraData.length-(loraData.length-pmData.length))
+    
+    await saveData(d.newList,sizeUnupload)
+    await savePM(d.pmList,sizeUnuploadPM)
   //}
   
 };
@@ -23,11 +29,18 @@ exports.getdata = async (req, res, next) => {
     return res.json(NowData);
   
 };
+exports.getpm = async (req, res, next) => {
+ 
+  const NowData = await getPM();
+  return res.json(NowData);
+
+};
 checkNewData = async (loraData, mainData) => {
   if (loraData.length > mainData.length) return true;
   return false;
 };
 saveData = async (d,index) => {
+
   for(let i=index ; i < d.length ; i++){
     console.log("HAVE NEW DATA");
     await new Location({
@@ -39,10 +52,21 @@ saveData = async (d,index) => {
     }).save();
   }
 };
+savePM = async (d,index) => {
+  for(let i=index ; i < d.length ; i++){
+    console.log("HAVE NEW DATA");
+    await new Pm({
+      Timestamp: d[i].Timestamp,
+      pm: d[i].pm,
+    }).save();
+  }
+};
 validate = async d => {
   var newList = [];
+  var pmList = []
   d.forEach(async _ => {
     let tmplist = {};
+    let pmlist = {};
     if (_.DevEUI_uplink.payload_hex && _.DevEUI_uplink.payload_hex.split("").length == 20) {
       let __ = await setFormData(_.DevEUI_uplink.payload_hex);
       tmplist.Timestamp = _.DevEUI_uplink.Time
@@ -50,9 +74,13 @@ validate = async d => {
       tmplist.Longitude = __.longitude;
       tmplist.Team = 13;
       newList.push(tmplist);
+      pmlist.Timestamp = _.DevEUI_uplink.Time
+      pmlist.pm = __.pm
+      pmList.push(pmlist);
     }
+
   });
-  return newList;
+  return {newList,pmList};
 };
 setFormData = async payload => {
   let arr = payload.match(/..?/g);
@@ -92,4 +120,7 @@ getlist = async () => {
 };
 getData = async () => {
   return await Location.find();
+};
+getPM = async () => {
+  return await Pm.find();
 };
